@@ -21,6 +21,7 @@ public class NewItemActivity extends AppCompatActivity {
     String id;
     String title;
     String details;
+    boolean isGot;
 
     boolean isEditMode = false;
 
@@ -39,6 +40,7 @@ public class NewItemActivity extends AppCompatActivity {
         id = intent.getStringExtra("ID");
         title = intent.getStringExtra("TITLE");
         details = intent.getStringExtra("DETAILS");
+        isGot = intent.getBooleanExtra("IS_GOT", false);
         if (id != null && title != null && details != null) {
             isEditMode = true;
             setTitle("Edit Item");
@@ -76,7 +78,7 @@ public class NewItemActivity extends AppCompatActivity {
 
         if (newDetails.trim().isEmpty())
             newDetails = " ";
-        Item newItem = new Item(newTitle, newDetails);
+        Item newItem = new Item(newTitle, newDetails, isGot);
         CollectionReference collectionReference;
         collectionReference = FirebaseFirestore.getInstance().collection("items");
         if (isEditMode) {

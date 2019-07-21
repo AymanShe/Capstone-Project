@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_get"
+        android:icon="@drawable/ic_get"
+        android:title="GET"/>
+    <item
+        android:id="@+id/nav_got"
+        android:icon="@drawable/ic_got"
+        android:title="GOT"/>
+</menu>

@@ -2,6 +2,7 @@ package com.aymanshehri.whenimthere;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.resources.TextAppearance;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.ItemHolder> {
     private Context context;
-
+    private boolean isGot;
     ItemAdapter(@NonNull FirestoreRecyclerOptions<Item> options, Context context) {
         super(options);
         this.context = context;
@@ -26,7 +28,13 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     @Override
     protected void onBindViewHolder(@NonNull ItemHolder itemHolder, int i, @NonNull Item item) {
         itemHolder.title.setText(item.getTitle());
+        if(item.getDetails().equals(" ")){
+            itemHolder.details.setVisibility(View.GONE);
+            itemHolder.title.setTextSize(26);
+        }
         itemHolder.details.setText(item.getDetails());
+
+        isGot = item.isGot();
     }
 
     @NonNull
@@ -39,6 +47,10 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
     void deleteItem(int position){
         getSnapshots().getSnapshot(position).getReference().delete();
 
+    }
+
+    public void toggleStatus(int adapterPosition) {
+        getSnapshots().getSnapshot(adapterPosition).getReference().update("got",!isGot);
     }
 
     class ItemHolder extends RecyclerView.ViewHolder{
@@ -69,6 +81,7 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
                         intent.putExtra("ID", id);
                         intent.putExtra("TITLE", clickedItem.getTitle());
                         intent.putExtra("DETAILS", clickedItem.getDetails());
+                        intent.putExtra("IS_GOT", clickedItem.isGot());
                         context.startActivity(intent);
 
                         //you have to pass the context

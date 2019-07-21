@@ -1,18 +1,20 @@
 package com.aymanshehri.whenimthere;
 
 public class Item {
-    String title;
-    String details;
+    private String title;
+    private String details;
+    private boolean isGot;
 
     public Item() {
     }
 
-    public Item(String title, String details) {
+    Item(String title, String details, boolean isGot) {
         this.title = title;
         this.details = details;
+        this.isGot = isGot;
     }
 
-    public String getTitle() {
+    String getTitle() {
         return title;
     }
 
@@ -20,11 +22,19 @@ public class Item {
         this.title = title;
     }
 
-    public String getDetails() {
+    String getDetails() {
         return details;
     }
 
     public void setDetails(String details) {
         this.details = details;
+    }
+
+    boolean isGot() {
+        return isGot;
+    }
+
+    public void setGot(boolean got) {
+        isGot = got;
     }
 }

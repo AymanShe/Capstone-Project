@@ -2,31 +2,22 @@ package com.aymanshehri.whenimthere;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
     AdView adView;
 
-    FirebaseFirestore dbRef = FirebaseFirestore.getInstance();
-    CollectionReference itemRef = dbRef.collection("items");
-
-    ItemAdapter adapter;
-
+    String isGotListKey = "isGotListKey";
+    Fragment fragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,56 +32,28 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
         //endregion
 
-        FloatingActionButton addItemButton = findViewById(R.id.fab_add_item);
-        addItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, NewItemActivity.class));
-            }
-        });
-        setUpRecyclerView();
+        BottomNavigationView navbar = findViewById(R.id.navbar);
+        navbar.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ListFragment()).commit();
+
     }
 
-    private void setUpRecyclerView() {
-        Query query = itemRef;
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
-                .setQuery(query, Item.class)
-                .build();
+                    Bundle bundle = new Bundle();
+                    if(menuItem.getItemId() == R.id.nav_got)
+                        bundle.putBoolean(isGotListKey, true);
+                    else
+                        bundle.putBoolean(isGotListKey, false);
 
-        adapter = new ItemAdapter(options, this);
-
-        RecyclerView recyclerView = findViewById(R.id.rv_item_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                if (direction == ItemTouchHelper.LEFT) {
-                    adapter.deleteItem(viewHolder.getAdapterPosition());
-
+                    Fragment fragment = new ListFragment();
+                    fragment.setArguments(bundle);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                    return true;
                 }
-
-            }
-        }).attachToRecyclerView(recyclerView);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
+            };
 }
