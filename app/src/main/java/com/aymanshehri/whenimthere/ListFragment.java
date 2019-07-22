@@ -68,7 +68,7 @@ public class ListFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            
+
             int iconResourceId;
             Drawable icon;
             int intrinsicWidth;
@@ -103,11 +103,11 @@ public class ListFragment extends Fragment {
 
                 ColorDrawable background = new ColorDrawable();
 
-                if (dX < 0) {
+                if (dX < 0) {//swipe left to delete
                     // Draw the red background on the canvas
                     String swipeLeftColor = "#f44336";
                     background.setColor(Color.parseColor(swipeLeftColor));
-                    background.setBounds(itemView.getRight() + Math.round(dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                    background.setBounds(itemView.getRight() + Math.round(dX), itemView.getTop(), itemView.getRight() - Math.round(dX), itemView.getBottom());
                     background.draw(c);
 
                     // Declare the delete icon
@@ -126,7 +126,7 @@ public class ListFragment extends Fragment {
                     // Draw the delete icon on the canvas
                     icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
                     icon.draw(c);
-                } else {
+                } else {//swipe right to toggle status
                     // Draw the red background on the canvas
                     String swipeRightColor;
                     if (isGotList)
@@ -134,7 +134,7 @@ public class ListFragment extends Fragment {
                     else
                         swipeRightColor = "#29BB43";
                     background.setColor(Color.parseColor(swipeRightColor));
-                    background.setBounds(itemView.getLeft(), itemView.getTop(), itemView.getLeft() + Math.round(dX), itemView.getBottom());
+                    background.setBounds(itemView.getLeft() - Math.round(dX), itemView.getTop(), itemView.getLeft() + Math.round(dX), itemView.getBottom());
                     background.draw(c);
 
                     // Declare the check icon
