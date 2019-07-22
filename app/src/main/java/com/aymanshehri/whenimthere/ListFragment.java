@@ -45,7 +45,7 @@ public class ListFragment extends Fragment {
             public void onClick(View v) {
                 startActivity(new Intent(getActivity(), NewItemActivity.class));
             }
-        });
+        });//todo change to an alert dialog
 
         isGotList = false;
         Bundle passedBundle = getArguments();
