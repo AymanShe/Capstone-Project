@@ -2,11 +2,13 @@ package com.aymanshehri.whenimthere;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -47,6 +49,9 @@ public class NewItemActivity extends AppCompatActivity {
             edTitle.setText(title);
             edDetails.setText(details.trim());
         }
+        edTitle.requestFocus();
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(edTitle.getId(), InputMethodManager.SHOW_FORCED);
     }
 
     @Override
@@ -72,7 +77,7 @@ public class NewItemActivity extends AppCompatActivity {
         String newDetails = edDetails.getText().toString();
 
         if (newTitle.trim().isEmpty()) {
-            Toast.makeText(this, "Please enter a title", Toast.LENGTH_LONG).show();//todo replace with snakebar
+            edTitle.setError("This field is required");
             return;
         }
 
