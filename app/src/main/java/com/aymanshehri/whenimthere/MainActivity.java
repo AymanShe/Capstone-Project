@@ -7,20 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
     AdView adView;
+    String isGotListExtraKey = "isGotListExtraKey";
+    private Fragment fragment;
 
-    String isGotListKey = "isGotListKey";
-
-    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,18 +32,20 @@ public class MainActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
         //endregion
 
-        mAuth = FirebaseAuth.getInstance();
-
         BottomNavigationView navbar = findViewById(R.id.navbar);
         navbar.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ListFragment()).commit();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(isGotListExtraKey, false);
+        fragment = new ListFragment();
+        fragment.setArguments(bundle);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
 
     }
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if(mAuth.getCurrentUser() == null){
+        if(MyFirebaseGetter.getCurrentUser() == null){
             finish();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -60,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
 
                     Bundle bundle = new Bundle();
                     if(menuItem.getItemId() == R.id.nav_got)
-                        bundle.putBoolean(isGotListKey, true);
+                        bundle.putBoolean(isGotListExtraKey, true);
                     else
-                        bundle.putBoolean(isGotListKey, false);
+                        bundle.putBoolean(isGotListExtraKey, false);
 
-                    Fragment fragment = new ListFragment();
+                    fragment = new ListFragment();
                     fragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
                     return true;

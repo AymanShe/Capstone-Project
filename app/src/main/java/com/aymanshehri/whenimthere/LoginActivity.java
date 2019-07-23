@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +35,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     String signUpText;
     String loginText;
 
-    private FirebaseAuth mAuth;
     private String TAG = "LoginActivity: ";
 
     @Override
@@ -51,8 +48,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button.setText(loginText);
         textView.setText(signUpText);
 
-        mAuth = FirebaseAuth.getInstance();
-
         textView.setOnClickListener(this);
         button.setOnClickListener(this);
     }
@@ -61,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if(mAuth.getCurrentUser() != null){
+        if(MyFirebaseGetter.getCurrentUser() != null){
             finish();
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -92,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        MyFirebaseGetter.getFirebaseAuthInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {

@@ -20,17 +20,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ListFragment extends Fragment {
 
+    @BindView(R.id.rv_item_list)
+    RecyclerView recyclerView;
+    @BindView(R.id.fab_add_item)
+    FloatingActionButton addItemButton;
 
     private ItemAdapter adapter;
-
-    private FirebaseFirestore dbRef = FirebaseFirestore.getInstance();
-    private CollectionReference itemRef = dbRef.collection("items");
 
     private boolean isGotList;
 
@@ -39,7 +41,8 @@ public class ListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_items, container, false);
-        FloatingActionButton addItemButton = view.findViewById(R.id.fab_add_item);
+        ButterKnife.bind(this, view);
+
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,23 +52,24 @@ public class ListFragment extends Fragment {
 
         isGotList = false;
         Bundle passedBundle = getArguments();
-        String isGotListKey = "isGotListKey";
-        if (passedBundle != null)
-            isGotList = passedBundle.getBoolean(isGotListKey);
-        boolean test = isGotList;
+        if (passedBundle != null){
+            String isGotListExtraKey = "isGotListExtraKey";
+            isGotList = passedBundle.getBoolean(isGotListExtraKey);
 
-        Query query = itemRef.whereEqualTo("got", isGotList);
+            Query query = MyFirebaseGetter.listQuery(MyFirebaseGetter.getUserEmail(),isGotList);
 
-        FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
-                .setQuery(query, Item.class)
-                .build();
+            FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
+                    .setQuery(query, Item.class)
+                    .build();
 
-        adapter = new ItemAdapter(options, getContext());
+            adapter = new ItemAdapter(options, getContext());
 
-        RecyclerView recyclerView = view.findViewById(R.id.rv_item_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(adapter);
+        }
+
+
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 

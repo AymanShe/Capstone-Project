@@ -11,10 +11,7 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class NewItemActivity extends AppCompatActivity {
     EditText edTitle;
@@ -26,6 +23,7 @@ public class NewItemActivity extends AppCompatActivity {
     boolean isGot;
 
     boolean isEditMode = false;
+    private String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +32,12 @@ public class NewItemActivity extends AppCompatActivity {
 
         setTitle("Add Item");
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-
+        userEmail = MyFirebaseGetter.getUserEmail();
         edTitle = findViewById(R.id.et_title);
         edDetails = findViewById(R.id.et_details);
 
         Intent intent = getIntent();
+
         id = intent.getStringExtra("ID");
         title = intent.getStringExtra("TITLE");
         details = intent.getStringExtra("DETAILS");
@@ -82,15 +81,13 @@ public class NewItemActivity extends AppCompatActivity {
         }
 
         if (newDetails.trim().isEmpty())
-            newDetails = " ";
+            newDetails = "";//todo check if you need to do this or not
         Item newItem = new Item(newTitle, newDetails, isGot);
-        CollectionReference collectionReference;
-        collectionReference = FirebaseFirestore.getInstance().collection("items");
         if (isEditMode) {
-            DocumentReference documentReference = collectionReference.document(id);
+            DocumentReference documentReference = MyFirebaseGetter.getItemsCollection(userEmail).document(id);
             documentReference.set(newItem);
         } else
-            collectionReference.add(newItem);
+            MyFirebaseGetter.getItemsCollection(userEmail).add(newItem);
         Toast.makeText(this, "Item Saved", Toast.LENGTH_LONG).show();//todo replace with snakebar
         finish();
     }

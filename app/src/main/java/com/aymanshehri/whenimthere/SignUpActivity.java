@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 import butterknife.BindView;
@@ -37,8 +36,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     String signUpText;
     String loginText;
 
-    private FirebaseAuth mAuth;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +46,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         loginText = getString(R.string.loginText);
         button.setText(signUpText);
         textView.setText(loginText);
-
-        mAuth = FirebaseAuth.getInstance();
 
         textView.setOnClickListener(this);
         button.setOnClickListener(this);
@@ -78,12 +73,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         String email = emailEditText.getText().toString().trim();
         String password = passwordEditText.getText().toString().trim();
-        mAuth.createUserWithEmailAndPassword(email, password)
+        MyFirebaseGetter.getFirebaseAuthInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
+                            //todo create a new document and collection for the new user if needed
                             finish();
                             Toast.makeText(SignUpActivity.this, "User Registered Successfully.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

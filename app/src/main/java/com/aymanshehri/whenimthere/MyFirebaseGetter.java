@@ -28,7 +28,7 @@ public class MyFirebaseGetter {
         return getFirebaseAuthInstance().getCurrentUser().getEmail();
     }
 
-    public static FirebaseAuth getFirebaseAuthInstance() {
+    static FirebaseAuth getFirebaseAuthInstance() {
         return FirebaseAuth.getInstance();
     }
 
