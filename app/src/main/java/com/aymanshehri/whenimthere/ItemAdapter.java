@@ -2,7 +2,6 @@ package com.aymanshehri.whenimthere;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.resources.TextAppearance;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -46,11 +44,14 @@ public class ItemAdapter extends FirestoreRecyclerAdapter<Item, ItemAdapter.Item
 
     void deleteItem(int position){
         getSnapshots().getSnapshot(position).getReference().delete();
-
     }
 
     public void toggleStatus(int adapterPosition) {
         getSnapshots().getSnapshot(adapterPosition).getReference().update("got",!isGot);
+    }
+
+    public void restoreItem(int adapterPosition) {
+        notifyItemChanged(adapterPosition);
     }
 
     class ItemHolder extends RecyclerView.ViewHolder{
