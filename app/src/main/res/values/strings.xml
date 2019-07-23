@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">When I\'m There</string>
+    <string name="loginText">Login</string>
+    <string name="sign_up_text">Sign Up</string>
 </resources>
