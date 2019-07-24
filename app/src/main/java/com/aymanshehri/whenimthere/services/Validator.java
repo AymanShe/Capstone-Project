@@ -1,11 +1,11 @@
-package com.aymanshehri.whenimthere;
+package com.aymanshehri.whenimthere.services;
 
 import android.util.Patterns;
 import android.widget.EditText;
 
-class Validator {
+public class Validator {
 
-    static boolean validEmail(EditText emailEditText){
+    public static boolean validEmail(EditText emailEditText){
         String email = emailEditText.getText().toString().trim();
         if (email.isEmpty()) {
             emailEditText.setError("This field ir required");
@@ -19,7 +19,7 @@ class Validator {
         }
         return true;
     }
-    static boolean validPassword(EditText passwordEditText){
+    public static boolean validPassword(EditText passwordEditText){
         String password = passwordEditText.getText().toString().trim();
         if (password.isEmpty()) {
             passwordEditText.setError("This field ir required");

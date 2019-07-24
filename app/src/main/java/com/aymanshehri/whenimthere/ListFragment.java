@@ -21,7 +21,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aymanshehri.whenimthere.ui.main.MainListFragment;
+import com.aymanshehri.whenimthere.models.Item;
+import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;

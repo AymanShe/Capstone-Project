@@ -11,6 +11,9 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.aymanshehri.whenimthere.models.Item;
+import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 import com.google.firebase.firestore.DocumentReference;
 
 public class NewItemActivity extends AppCompatActivity {

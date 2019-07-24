@@ -1,4 +1,4 @@
-package com.aymanshehri.whenimthere;
+package com.aymanshehri.whenimthere.models;
 
 public class Item {
     private String title;
@@ -8,13 +8,13 @@ public class Item {
     public Item() {
     }
 
-    Item(String title, String details, boolean isGot) {
+    public Item(String title, String details, boolean isGot) {
         this.title = title;
         this.details = details;
         this.isGot = isGot;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
@@ -22,7 +22,7 @@ public class Item {
         this.title = title;
     }
 
-    String getDetails() {
+    public String getDetails() {
         return details;
     }
 
@@ -30,7 +30,7 @@ public class Item {
         this.details = details;
     }
 
-    boolean isGot() {
+    public boolean isGot() {
         return isGot;
     }
 

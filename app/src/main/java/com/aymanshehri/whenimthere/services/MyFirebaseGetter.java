@@ -1,4 +1,4 @@
-package com.aymanshehri.whenimthere;
+package com.aymanshehri.whenimthere.services;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -7,7 +7,7 @@ import com.google.firebase.firestore.Query;
 
 public class MyFirebaseGetter {
     //Firestore Methods
-    public static FirebaseFirestore getFirestoreInstance(){
+    private static FirebaseFirestore getFirestoreInstance(){
         return FirebaseFirestore.getInstance();
     }
 
@@ -15,24 +15,24 @@ public class MyFirebaseGetter {
         return FirebaseFirestore.getInstance().collection("lists");
     }
 
-    static Query listQuery(String listOwner, boolean isGotList) {
+    public static Query listQuery(String listOwner, boolean isGotList) {
         return getListCollectionReference().document(listOwner).collection("items").whereEqualTo("got", isGotList);
     }
 
-    static CollectionReference getItemsCollection(String userEmail) {
+    public static CollectionReference getItemsCollection(String userEmail) {
         return getListCollectionReference().document(userEmail).collection("items");
     }
 
     //FirebaseAuth methods
-    static String getUserEmail(){
+    public static String getUserEmail(){
         return getFirebaseAuthInstance().getCurrentUser().getEmail();
     }
 
-    static FirebaseAuth getFirebaseAuthInstance() {
+    public static FirebaseAuth getFirebaseAuthInstance() {
         return FirebaseAuth.getInstance();
     }
 
-    static Object getCurrentUser() {
+    public static Object getCurrentUser() {
         return getFirebaseAuthInstance().getCurrentUser();
     }
 }

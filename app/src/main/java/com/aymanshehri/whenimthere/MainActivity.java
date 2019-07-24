@@ -3,6 +3,7 @@ package com.aymanshehri.whenimthere;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
