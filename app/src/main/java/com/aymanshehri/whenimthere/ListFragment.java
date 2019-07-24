@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.aymanshehri.whenimthere.ui.main.MainListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;
@@ -35,9 +36,27 @@ public class ListFragment extends Fragment {
     @BindView(R.id.fab_add_item)
     FloatingActionButton addItemButton;
 
+    private static final String isGotListExtraKey = "isGotListExtraKey";
+
     private ItemAdapter adapter;
 
     private boolean isGotList;
+
+    public static ListFragment newInstance(boolean param1) {
+        ListFragment fragment = new ListFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(isGotListExtraKey, param1);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            isGotList = getArguments().getBoolean(isGotListExtraKey);
+        }
+    }
 
     @Nullable
     @Override
@@ -56,7 +75,6 @@ public class ListFragment extends Fragment {
         isGotList = false;
         Bundle passedBundle = getArguments();
         if (passedBundle != null){
-            String isGotListExtraKey = "isGotListExtraKey";
             isGotList = passedBundle.getBoolean(isGotListExtraKey);
 
             Query query = MyFirebaseGetter.listQuery(MyFirebaseGetter.getUserEmail(),isGotList);

@@ -1,47 +1,47 @@
 package com.aymanshehri.whenimthere;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.aymanshehri.whenimthere.ui.main.SectionsPagerAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
-
+    @BindView(R.id.view_pager)
+    MyViewPager viewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabs;
+    @BindView(R.id.adView)
     AdView adView;
-    String isGotListExtraKey = "isGotListExtraKey";
-    private Fragment fragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         //region AdMob
         //code to load ads
-        adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)//todo remove this before submit
                 .build();
         adView.loadAd(adRequest);
         //endregion
 
-        BottomNavigationView navbar = findViewById(R.id.navbar);
-        navbar.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
 
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(isGotListExtraKey, false);
-        fragment = new ListFragment();
-        fragment.setArguments(bundle);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        viewPager.setAdapter(sectionsPagerAdapter);
 
+        tabs.setupWithViewPager(viewPager);
     }
+
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
@@ -52,21 +52,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-                    Bundle bundle = new Bundle();
-                    if(menuItem.getItemId() == R.id.nav_got)
-                        bundle.putBoolean(isGotListExtraKey, true);
-                    else
-                        bundle.putBoolean(isGotListExtraKey, false);
-
-                    fragment = new ListFragment();
-                    fragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
-                    return true;
-                }
-            };
 }

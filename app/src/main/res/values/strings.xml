@@ -2,4 +2,10 @@
     <string name="app_name">When I\'m There</string>
     <string name="loginText">Login</string>
     <string name="sign_up_text">Sign Up</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="tab_text_1">MY LIST</string>
+    <string name="tab_text_2">FRIENDS LIST</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello Friends List fragment</string>
 </resources>
