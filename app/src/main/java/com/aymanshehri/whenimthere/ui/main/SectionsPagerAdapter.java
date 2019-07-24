@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.aymanshehri.whenimthere.FriendsListFragment;
+import com.aymanshehri.whenimthere.MainFriendsListFragment;
 import com.aymanshehri.whenimthere.R;
 
 /**
@@ -34,7 +34,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = MainListFragment.newInstance(false);
                 break;
             case 1:
-                fragment = FriendsListFragment.newInstance();
+                fragment = MainFriendsListFragment.newInstance();
                 break;
         }
         return fragment;
