@@ -8,7 +8,7 @@
     tools:context="ui.main.MainListFragment">
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/fl_friends_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/navbar"/>

@@ -80,7 +80,7 @@ public class MainListFragment extends Fragment {
                 else
                     fragment = ListFragment.newInstance(false);
 
-                getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.fl_friends_fragment_container, fragment).commit();
                 return true;
             }
         });
@@ -89,7 +89,7 @@ public class MainListFragment extends Fragment {
         bundle.putBoolean(ARG_PARAM1, mParam1);
         fragment = new ListFragment();
         fragment.setArguments(bundle);
-        getChildFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+        getChildFragmentManager().beginTransaction().replace(R.id.fl_friends_fragment_container, fragment).commit();
 
 
         return view;
