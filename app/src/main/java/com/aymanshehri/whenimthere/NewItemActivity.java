@@ -27,6 +27,7 @@ public class NewItemActivity extends AppCompatActivity {
 
     boolean isEditMode = false;
     private String userEmail;
+    private static final String USER_EMAIL_EXTRA_KEY = "userEmailExtraKey";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +36,12 @@ public class NewItemActivity extends AppCompatActivity {
 
         setTitle("Add Item");
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
-        userEmail = MyFirebaseGetter.getUserEmail();
         edTitle = findViewById(R.id.et_title);
         edDetails = findViewById(R.id.et_details);
 
         Intent intent = getIntent();
 
+        userEmail = intent.getStringExtra(USER_EMAIL_EXTRA_KEY);
         id = intent.getStringExtra("ID");
         title = intent.getStringExtra("TITLE");
         details = intent.getStringExtra("DETAILS");

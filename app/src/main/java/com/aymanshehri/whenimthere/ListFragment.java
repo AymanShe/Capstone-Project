@@ -72,7 +72,11 @@ public class ListFragment extends Fragment {
         addItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), NewItemActivity.class));
+                Intent intent = new Intent(getActivity(), NewItemActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString(USER_EMAIL_EXTRA_KEY, userEmail);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });//todo change to an alert dialog
 
