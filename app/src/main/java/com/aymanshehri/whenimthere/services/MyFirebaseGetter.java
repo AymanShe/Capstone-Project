@@ -12,7 +12,7 @@ public class MyFirebaseGetter {
     }
 
     private static CollectionReference getListCollectionReference(){
-        return FirebaseFirestore.getInstance().collection("lists");
+        return getFirestoreInstance().collection("lists");
     }
 
     public static Query listQuery(String listOwner, boolean isGotList) {
@@ -34,5 +34,9 @@ public class MyFirebaseGetter {
 
     public static Object getCurrentUser() {
         return getFirebaseAuthInstance().getCurrentUser();
+    }
+
+    public static Query getFriendsList() {
+        return getListCollectionReference().document(getUserEmail()).collection("friends");
     }
 }
