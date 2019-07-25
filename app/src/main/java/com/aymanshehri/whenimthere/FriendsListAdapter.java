@@ -14,13 +14,22 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
 public class FriendsListAdapter extends FirestoreRecyclerAdapter<Friend, FriendsListAdapter.FriendHolder> {
 
-    public FriendsListAdapter(@NonNull FirestoreRecyclerOptions<Friend> options) {
+    private OnFriendClick mCallback;
+
+    public FriendsListAdapter(@NonNull FirestoreRecyclerOptions<Friend> options, OnFriendClick mCallback) {
         super(options);
+        this.mCallback = mCallback;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull FriendHolder friendHolder, int i, @NonNull Friend friend) {
         friendHolder.email.setText(friend.getEmail());
+        friendHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mCallback.onClick(friend.getEmail());
+            }
+        });
     }
 
     @NonNull
@@ -30,11 +39,13 @@ public class FriendsListAdapter extends FirestoreRecyclerAdapter<Friend, Friends
         return new FriendHolder(view);
     }
 
-    class FriendHolder extends RecyclerView.ViewHolder{
+    class FriendHolder extends RecyclerView.ViewHolder {
         TextView email;
+        View itemView;
 
         public FriendHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = itemView;
             email = itemView.findViewById(R.id.tv_email);
         }
     }

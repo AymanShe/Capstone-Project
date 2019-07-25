@@ -7,11 +7,23 @@
     android:layout_height="match_parent"
     tools:context="ui.main.MainListFragment">
 
+    <TextView
+        android:id="@+id/tv_friends_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        tools:text="example@email.com"
+        android:textColor="#FFFFFF"
+        android:visibility="gone"/>
+
     <FrameLayout
-        android:id="@+id/fl_friends_fragment_container"
+        android:id="@+id/fl_list_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/navbar"/>
+        android:layout_above="@id/navbar"
+        android:layout_below="@+id/tv_friends_email"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navbar"

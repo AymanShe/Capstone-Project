@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.aymanshehri.whenimthere.ListFragment;
 import com.aymanshehri.whenimthere.R;
+import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;
@@ -34,14 +36,16 @@ public class MainListFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private boolean mParam1;
-    private String mParam2;
+    private boolean isGotList;
+    private String userEmail;
 
     private OnFragmentInteractionListener mListener;
 
 
     @BindView(R.id.navbar)
     BottomNavigationView navbar;
+    @BindView(R.id.tv_friends_email)
+    TextView friendsEmail;
     private Fragment fragment;
 
 
@@ -49,10 +53,11 @@ public class MainListFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static MainListFragment newInstance(boolean param1) {
+    public static MainListFragment newInstance(boolean param1, String param2) {
         MainListFragment fragment = new MainListFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -61,7 +66,8 @@ public class MainListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getBoolean(ARG_PARAM1);
+            isGotList = getArguments().getBoolean(ARG_PARAM1);
+            userEmail = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -70,26 +76,30 @@ public class MainListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_list, container, false);
         ButterKnife.bind(this, view);
+        if(userEmail != MyFirebaseGetter.getUserEmail()){
+            friendsEmail.setText(userEmail);
+            friendsEmail.setVisibility(View.VISIBLE);
+        }else{
+            friendsEmail.setText("");
+            friendsEmail.setVisibility(View.GONE);
+        }
 
         navbar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 if(menuItem.getItemId() == R.id.nav_got)
-                    fragment = ListFragment.newInstance(true);
+                    fragment = ListFragment.newInstance(true,userEmail);
                 else
-                    fragment = ListFragment.newInstance(false);
+                    fragment = ListFragment.newInstance(false,userEmail);
 
-                getChildFragmentManager().beginTransaction().replace(R.id.fl_friends_fragment_container, fragment).commit();
+                getChildFragmentManager().beginTransaction().replace(R.id.fl_list_fragment_container, fragment).commit();
                 return true;
             }
         });
 
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(ARG_PARAM1, mParam1);
-        fragment = new ListFragment();
-        fragment.setArguments(bundle);
-        getChildFragmentManager().beginTransaction().replace(R.id.fl_friends_fragment_container, fragment).commit();
+        fragment = ListFragment.newInstance(isGotList, userEmail);
+        getChildFragmentManager().beginTransaction().replace(R.id.fl_list_fragment_container, fragment).commit();
 
 
         return view;

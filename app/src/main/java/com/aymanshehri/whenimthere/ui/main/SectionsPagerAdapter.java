@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.aymanshehri.whenimthere.MainFriendsListFragment;
 import com.aymanshehri.whenimthere.R;
+import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -31,7 +32,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = MainListFragment.newInstance(false);
+                fragment = MainListFragment.newInstance(false, MyFirebaseGetter.getUserEmail());
                 break;
             case 1:
                 fragment = MainFriendsListFragment.newInstance();

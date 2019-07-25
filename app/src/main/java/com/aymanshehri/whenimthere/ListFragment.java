@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,21 +33,22 @@ import butterknife.ButterKnife;
 
 public class ListFragment extends Fragment {
 
+    private static final String IS_GOT_LIST_EXTRA_KEY = "isGotListExtraKey";
+    private static final String USER_EMAIL_EXTRA_KEY = "userEmailExtraKey";
     @BindView(R.id.rv_item_list)
     RecyclerView recyclerView;
     @BindView(R.id.fab_add_item)
     FloatingActionButton addItemButton;
-
-    private static final String isGotListExtraKey = "isGotListExtraKey";
-
     private ItemAdapter adapter;
 
     private boolean isGotList;
+    private String userEmail;
 
-    public static ListFragment newInstance(boolean param1) {
+    public static ListFragment newInstance(boolean param1, String param2) {
         ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
-        args.putBoolean(isGotListExtraKey, param1);
+        args.putBoolean(IS_GOT_LIST_EXTRA_KEY, param1);
+        args.putString(USER_EMAIL_EXTRA_KEY, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -55,7 +57,8 @@ public class ListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            isGotList = getArguments().getBoolean(isGotListExtraKey);
+            isGotList = getArguments().getBoolean(IS_GOT_LIST_EXTRA_KEY);
+            userEmail = getArguments().getString(USER_EMAIL_EXTRA_KEY);
         }
     }
 
@@ -75,10 +78,10 @@ public class ListFragment extends Fragment {
 
         isGotList = false;
         Bundle passedBundle = getArguments();
-        if (passedBundle != null){
-            isGotList = passedBundle.getBoolean(isGotListExtraKey);
+        if (passedBundle != null) {
+            isGotList = passedBundle.getBoolean(IS_GOT_LIST_EXTRA_KEY);
 
-            Query query = MyFirebaseGetter.listQuery(MyFirebaseGetter.getUserEmail(),isGotList);
+            Query query = MyFirebaseGetter.listQuery(userEmail, isGotList);
 
             FirestoreRecyclerOptions<Item> options = new FirestoreRecyclerOptions.Builder<Item>()
                     .setQuery(query, Item.class)
@@ -90,7 +93,6 @@ public class ListFragment extends Fragment {
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
-
 
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -116,7 +118,7 @@ public class ListFragment extends Fragment {
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
+                            switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     //Yes button clicked
                                     adapter.deleteItem(viewHolder.getAdapterPosition());
