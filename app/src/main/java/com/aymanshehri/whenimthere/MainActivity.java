@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabs;
     @BindView(R.id.adView)
     AdView adView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,11 +47,19 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        if(MyFirebaseGetter.getCurrentUser() == null){
+        if (MyFirebaseGetter.getCurrentUser() == null) {
             finish();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (tabs.getSelectedTabPosition() == 1) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        } else
+            super.onBackPressed();
     }
 }
