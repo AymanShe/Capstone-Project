@@ -46,7 +46,11 @@ public class NewContributorActivity extends AppCompatActivity {
     public void addContributor(View v) {
         //hide the keyboard to show the snackbar
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(new View(this).getWindowToken(), 0);
+        View view = this.getCurrentFocus();
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
         String email = contributorEmail.getText().toString();
         //check if valid input
