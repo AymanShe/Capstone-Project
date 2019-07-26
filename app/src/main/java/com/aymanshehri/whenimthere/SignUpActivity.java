@@ -80,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            //todo create a new document and collection for the new user if needed
+                            MyFirebaseGetter.createUserInDB(email);
                             finish();
                             Toast.makeText(SignUpActivity.this, "User Registered Successfully.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);

@@ -3,6 +3,7 @@ package com.aymanshehri.whenimthere.services;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -13,10 +14,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -71,7 +76,7 @@ public class MyFirebaseGetter {
         Snackbar snackbar = Snackbar.make(view, "Please Wait. Adding in Progress", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
 
-        String email = editText.getText().toString();
+        String email = editText.getText().toString().trim();
 
         //check if exists
         getListCollectionReference()
@@ -105,6 +110,7 @@ public class MyFirebaseGetter {
                                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                     @Override
                                                                     public void onSuccess(Void aVoid) {
+                                                                        //todo use transactions
                                                                         Map<String, Object> map = new HashMap<>();
                                                                         map.put("email", getUserEmail());
                                                                         getFriendsList(email).document().set(map);
@@ -139,6 +145,34 @@ public class MyFirebaseGetter {
                             button.setClickable(true);
                             Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
                         }
+                    }
+                });
+    }
+
+    public static void createUserInDB(String email) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("active", true);
+        getListCollectionReference().document(email).set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Get a new write batch
+                        WriteBatch batch = getFirestoreInstance().batch();
+
+                        DocumentReference contributorsRef = getListCollectionReference().document(email).collection("contributors").document();
+                        batch.set(contributorsRef, new HashMap<>());
+                        DocumentReference friendsRef = getListCollectionReference().document(email).collection("friends").document();
+                        batch.set(friendsRef, new HashMap<>());
+                        DocumentReference itemsRef = getListCollectionReference().document(email).collection("items").document();
+                        batch.set(itemsRef, new HashMap<>());
+
+                        // Commit the batch
+                        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // ...
+                            }
+                        });
                     }
                 });
     }
