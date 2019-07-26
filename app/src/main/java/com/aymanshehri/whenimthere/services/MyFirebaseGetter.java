@@ -1,17 +1,34 @@
 package com.aymanshehri.whenimthere.services;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class MyFirebaseGetter {
     //Firestore Methods
-    private static FirebaseFirestore getFirestoreInstance(){
+    private static FirebaseFirestore getFirestoreInstance() {
         return FirebaseFirestore.getInstance();
     }
 
-    private static CollectionReference getListCollectionReference(){
+    private static CollectionReference getListCollectionReference() {
         return getFirestoreInstance().collection("lists");
     }
 
@@ -23,8 +40,12 @@ public class MyFirebaseGetter {
         return getListCollectionReference().document(userEmail).collection("items");
     }
 
+    public static CollectionReference getContributorsCollection() {
+        return getListCollectionReference().document(getUserEmail()).collection("contributors");
+    }
+
     //FirebaseAuth methods
-    public static String getUserEmail(){
+    public static String getUserEmail() {
         return getFirebaseAuthInstance().getCurrentUser().getEmail();
     }
 
@@ -38,5 +59,87 @@ public class MyFirebaseGetter {
 
     public static Query getFriendsList() {
         return getListCollectionReference().document(getUserEmail()).collection("friends");
+    }
+
+    public static CollectionReference getFriendsList(String ownerEmail) {
+        return getListCollectionReference().document(ownerEmail).collection("friends");
+    }
+
+    public static void addContributor(View view, EditText editText) {
+        Button button = (Button) view;
+        button.setClickable(false);
+        Snackbar snackbar = Snackbar.make(view, "Please Wait. Adding in Progress", Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+
+        String email = editText.getText().toString();
+
+        //check if exists
+        getListCollectionReference()
+                .document(email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                //check if email already added
+                                getContributorsCollection()
+                                        .whereEqualTo("email", email)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    if (task.getResult().size() > 0) {
+                                                        snackbar.dismiss();
+                                                        button.setClickable(true);
+                                                        Snackbar.make(view, email + " is already added.", Snackbar.LENGTH_SHORT).show();
+                                                    } else {
+                                                        //add contributor
+                                                        Map<String, Object> map = new HashMap<>();
+                                                        map.put("email", email);
+
+                                                        getContributorsCollection().document()
+                                                                .set(map)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        Map<String, Object> map = new HashMap<>();
+                                                                        map.put("email", getUserEmail());
+                                                                        getFriendsList(email).document().set(map);
+                                                                        snackbar.dismiss();
+                                                                        button.setClickable(true);
+                                                                        Snackbar.make(view, email + " Was Added Successfully.", Snackbar.LENGTH_SHORT).show();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        snackbar.dismiss();
+                                                                        button.setClickable(true);
+                                                                        Snackbar.make(view, e.getMessage(), Snackbar.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+                                                    }
+                                                } else {
+                                                    snackbar.dismiss();
+                                                    button.setClickable(true);
+                                                    Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        });
+                            } else {
+                                snackbar.dismiss();
+                                button.setClickable(true);
+                                Snackbar.make(view, email + " doesn't exist.", Snackbar.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            snackbar.dismiss();
+                            button.setClickable(true);
+                            Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

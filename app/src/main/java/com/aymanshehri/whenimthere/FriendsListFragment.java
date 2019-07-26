@@ -1,11 +1,10 @@
 package com.aymanshehri.whenimthere;
 
 import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,9 +15,8 @@ import android.view.ViewGroup;
 
 import com.aymanshehri.whenimthere.models.Friend;
 import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
-import com.aymanshehri.whenimthere.ui.main.MainListFragment;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
@@ -30,6 +28,8 @@ public class FriendsListFragment extends Fragment {
 
     @BindView(R.id.rv_friends_list)
     RecyclerView recyclerView;
+    @BindView(R.id.fab_add_contributor)
+    FloatingActionButton addContributorFab;
     private FriendsListAdapter adapter;
 
     public FriendsListFragment() {
@@ -45,6 +45,13 @@ public class FriendsListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friends_list, container, false);
         ButterKnife.bind(this, view);
 
+        addContributorFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), NewContributorActivity.class));
+            }
+        });
+        
         Query query = MyFirebaseGetter.getFriendsList();
 
         FirestoreRecyclerOptions<Friend> options = new FirestoreRecyclerOptions.Builder<Friend>().setQuery(query, Friend.class).build();
