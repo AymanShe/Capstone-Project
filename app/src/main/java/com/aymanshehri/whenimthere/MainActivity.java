@@ -1,8 +1,12 @@
 package com.aymanshehri.whenimthere;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.widget.RelativeLayout;
 
+import com.aymanshehri.whenimthere.services.CheckConnectionAsync;
 import com.aymanshehri.whenimthere.services.MyFirebaseGetter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -22,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     TabLayout tabs;
     @BindView(R.id.adView)
     AdView adView;
+    @BindView(R.id.rl_check_connection)
+    RelativeLayout checkConnectionLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onStart() {
         super.onStart();
+        CheckConnectionAsync checkConnectionAsync = new CheckConnectionAsync(this, checkConnectionLayout);
+        checkConnectionAsync.execute();
         // Check if user is signed in (non-null) and update UI accordingly.
         if (MyFirebaseGetter.getCurrentUser() == null) {
             finish();

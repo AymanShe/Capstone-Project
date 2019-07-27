@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,5 +63,22 @@
 
 
     </RelativeLayout>
-
+    <RelativeLayout
+        android:id="@+id/rl_check_connection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/darker_gray">
+        <ProgressBar
+            android:id="@+id/pb_internet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/tv_checking_internet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trying To Connect To Internet"
+            android:layout_below="@id/pb_internet"
+            android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
