@@ -4,24 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewContributorActivity"
-    android:padding="16dp">
+    android:padding="16dp"
+    tools:context=".NewContributorActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Adding a contributor means that they can edit and add to your list. If you want to add a friend ask them to add you as a contributor"/>
 
     <EditText
         android:id="@+id/et_contributor_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
-        android:inputType="text"/>
+        android:inputType="textEmailAddress" />
+
     <Button
         android:id="@+id/addContributorButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Add Contributor"/>
+        android:text="Add Contributor" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Adding a contributor means that they can edit and add to your list. If you want to add a friend ask them to add you as a contributor" />
 </LinearLayout>
