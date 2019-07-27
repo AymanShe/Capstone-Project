@@ -12,25 +12,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewContributorActivity"></activity>
         <!-- This meta-data tag is required to use Google Play Services. -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-8998955833387198~9893510237" />
+        <receiver android:name=".MyAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/my_app_widget_info" />
+        </receiver>
+        <activity android:name=".NewContributorActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main"
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.NoActionBar" >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:launchMode="singleTop"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".NewItemActivity"
             android:parentActivityName=".MainActivity" />
